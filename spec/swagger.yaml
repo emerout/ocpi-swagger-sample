@@ -51,7 +51,7 @@ tags:
 
       (In the sequence diagrams below we use relative paths as short resource identifiers to illustrate a point; please note that they should really be absolute URLs in any working implementation of OCPI)
 
-      ![the OCPI registration process](data/registration-sequence.png)
+      ![the OCPI registration process](https://github.com/ocpi/ocpi/raw/master/data/registration-sequence.png)
 
       Due to its symmetric nature, the CPO and eMSP can be swapped in the registration sequence.
 
@@ -71,7 +71,7 @@ tags:
 
       At some point both parties will have implemented a newer OCPI version. To start using the newer version, one party has to send a PUT request to the credentials endpoint of the other party.
 
-      ![the OCPI update process](data/update-sequence.png)
+      ![the OCPI update process](https://github.com/ocpi/ocpi/raw/master/data/update-sequence.png)
 
 
       ### 3.3 Changing endpoints for the current version
@@ -276,3 +276,19 @@ definitions:
       country_code:
         type: "string"
         description: Country code of the country this party is operating in.
+
+  BusinessDetails:
+    type: "object"
+    properties:
+      name:
+        type: string
+      website: 
+        type: string
+        $ref: "#/definitions/URL"
+      logo: 
+        type: string
+
+  URL: 
+    type: string
+    description: An URL a string(255) type following the [w3.org spec](http://www.w3.org/Addressing/URL/uri-spec.html).
+  
