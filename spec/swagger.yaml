@@ -40,7 +40,61 @@ tags:
   - name: "versions"
   - name: "version-details"
   - name: "credentials"
-    description: blhablha
+    description: |
+      ## 3 Use cases
+
+      ### 3.1 Registration
+
+      To register a CPO in an eMSP platform (or vice versa), the CPO must create a unique token that can be used for authenticating the eMSP. This token along with the versions endpoint should be sent to the eMSP in a secure way that is outside the scope of this protocol.
+
+      `TOKEN_A` is given offline, after registration store the `TOKEN_C` which will be used in future exchanges. 
+
+      (In the sequence diagrams below we use relative paths as short resource identifiers to illustrate a point; please note that they should really be absolute URLs in any working implementation of OCPI)
+
+      ![the OCPI registration process](data/registration-sequence.png)
+
+      Due to its symmetric nature, the CPO and eMSP can be swapped in the registration sequence.
+
+      <!--
+        Add some whitelines for PDF generation fix, TODO check in new PDf versions 
+      -->
+
+      &nbsp;
+
+      &nbsp;
+
+      <!--
+        Add some whitelines for PDF generation fix, TODO check in new PDf versions 
+      -->
+
+      ### 3.2 Updating to a newer version
+
+      At some point both parties will have implemented a newer OCPI version. To start using the newer version, one party has to send a PUT request to the credentials endpoint of the other party.
+
+      ![the OCPI update process](data/update-sequence.png)
+
+
+      ### 3.3 Changing endpoints for the current version
+
+      This can be done by following the update procedure for the same version. By sending a PUT request to the credentials endpoint of this version, the other party will fetch and store the corresponding set of endpoints.
+
+      ### 3.4 Updating the credentials and resetting the token
+
+      The credentials (or parts thereof, such as the token) can be updated by sending the new credentials via a PUT request to the credentials endpoint of the current version, similar to the update procedure described above.
+
+      ### 3.5 Errors during registration
+
+      When the Server connects back to the client during the credentials registration, it might encounter problems. When this happens, the Server should add the status code: [3001](status_codes.md#3xxx-server-errors) in the response to the POST from the client. 
+
+      ### 3.6 Required endpoints not available
+
+      When two parties connect, it might happen that one of the parties expects a certain endpoint to be available at the other party. 
+
+      For example: a CPO could only want to connect when the CDRs endpoint is available in an eMSP system. 
+
+      In case the client is starting the credentials exchange process and cannot find the endpoints it expects, it is expected NOT to send the POST request with credentials to the server. Log a message/notify the administrator to contact the administrator of the server system.
+
+      In case the server, receiving the request from a client, cannot find the endpoints it expects, then it is expected to respond to the request with a status code: [3003](status_codes.md#3xxx-server-errors).    
 consumes:
   - "application/json"
 produces:
