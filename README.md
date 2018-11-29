@@ -1,4 +1,4 @@
-# ocpi OpenAPI Specification
+# OCPI OpenAPI Specification
 [![Build Status](https://travis-ci.org/:emerout/ocpi-swagger-sample.svg?branch=master)](https://travis-ci.org/:emerout/ocpi-swagger-sample)
 
 ## Steps to finish
