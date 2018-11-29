@@ -1,0 +1,11 @@
+{
+  "generator-openapi-repo": {
+    "importExistingSpec": true,
+    "importedSpec": "/Users/echardiny/PDB/steve/src/main/resources/ocpi-version-api.yml",
+    "name": "ocpi",
+    "repo": ":emerout/ocpi-swagger-sample",
+    "splitSpec": false,
+    "samples": true,
+    "installSwaggerUI": true
+  }
+}

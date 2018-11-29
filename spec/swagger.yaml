@@ -1,0 +1,106 @@
+swagger: "2.0"
+info:
+  description: |
+    The Open Charge Point Interface (OCPI) enables a scalable, automated EV roaming setup between Charge Point Operators and e-Mobility Service Providers.
+    It supports authorization, charge point information exchange (including live status updates and transaction events), charge detail record exchange, remote charge point commands and, finally, the exchange of smart-charging commands between parties.
+  version: "-"
+  title: "OCPI Version"
+host: "example.com"
+basePath: "/ocpi/cpo/ /ocpi/emsp/"
+tags:
+  - name: "versions"
+  - name: "version-detail"
+
+schemes:
+  - "https"
+  - "http"
+
+paths:
+  /versions:
+    get:
+      tags:
+        - "versions"
+      summary: "Version information"
+      description: |
+        This endpoint lists all the available OCPI versions and the corresponding URLs to where version specific details such as the supported endpoints can be found.
+        Example endpoint structure: `ocpi/cpo/versions` and `/ocpi/emsp/versions`
+        The exact URL to the implemented version endpoint should be given (offline) to parties that interface with your OCPI implementation, this endpoint is the starting point for discovering locations of the different modules and version of OCPI that have been implemented.
+        Both the CPO and the eMSP must have this endpoint.
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Version"
+
+  /{version}:
+    get:
+      tags:
+        - "version-detail"
+      summary: "Version details"
+      description: |
+        This endpoint lists the supported endpoints and their URLs for a specific OCPI version. To notify the other party that the list of endpoints of your current version has changed, you can send a PUT request to the corresponding credentials endpoint (see the credentials chapter).
+
+        Both the CPO and the eMSP must have this endpoint.
+
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "version"
+          in: "path"
+          description: blah
+          required: true
+          type: "string"
+
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/VersionDetail"
+
+
+definitions:
+  Version:
+    type: "object"
+    properties:
+      version:
+        type: "string"
+        example: "2.1.1"
+      url:
+        type: "string"
+        example: "https://example.com/ocpi/cpo/2.1.1/"
+
+  VersionDetail:
+    type: "object"
+    properties:
+      version:
+        type: "string"
+        example: "2.1.1"
+      endpoints:
+        type: "array"
+        items:
+          $ref: "#/definitions/Endpoint"
+
+  Endpoint:
+    type: "object"
+    properties:
+      identifier:
+        type: "string"
+        example: "credentials"
+      url:
+        type: "string"
+        example: "https://example.com/ocpi/cpo/2.0/credentials/"
+
+
+
+externalDocs:
+  description: "Find out more about OCPI"
+  url: "https://github.com/ocpi/ocpi"
