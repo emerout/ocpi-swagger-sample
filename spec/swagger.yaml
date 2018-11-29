@@ -212,7 +212,6 @@ definitions:
     type: "object"
     properties:
       identifier:
-        type: "string"
         $ref: "#/definitions/ModuleID"
       url:
         type: "string"
@@ -270,7 +269,6 @@ definitions:
         description: The URL to your API versions endpoint.
       business_details: 
         description: Details of this party.
-        type: object
         $ref: "#/definitions/BusinessDetails"
       party_id:
         type: "string"
@@ -285,11 +283,10 @@ definitions:
       name:
         type: string
       website: 
-        type: string
         $ref: "#/definitions/URL"
       logo: 
         type: string
-        
+
   URL: 
     type: string
     description: An URL a string(255) type following the [w3.org spec](http://www.w3.org/Addressing/URL/uri-spec.html).
