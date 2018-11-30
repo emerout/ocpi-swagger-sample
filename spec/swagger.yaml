@@ -7,9 +7,9 @@ info:
 
     ## OCPI 2.1.1
     During implementation of OCPI 2.1, a number of bugs in the message definition were found.
-    This forced us to release a bug fix: OCPI 2.1.1. 
+    This forced us to release a bug fix: OCPI 2.1.1.
     With the release of OCPI 2.1.1: OCPI 2.1 is deprecated, 2.1 should no longer used and replaced by 2.1.1.
-    It should be a small effort to upgrade an existing 2.1 implementation to 2.1.1. 
+    It should be a small effort to upgrade an existing 2.1 implementation to 2.1.1.
 
     For more information on message level changes see [changelog](changelog.md#changelog).
 
@@ -35,7 +35,7 @@ info:
   version: "2.1.1"
   title: "OCPI Specification API"
 host: "example.com"
-basePath: "/ocpi/cpo/"
+basePath: "/"
 tags:
   - name: "versions"
   - name: "version-details"
@@ -47,7 +47,7 @@ tags:
 
       To register a CPO in an eMSP platform (or vice versa), the CPO must create a unique token that can be used for authenticating the eMSP. This token along with the versions endpoint should be sent to the eMSP in a secure way that is outside the scope of this protocol.
 
-      `TOKEN_A` is given offline, after registration store the `TOKEN_C` which will be used in future exchanges. 
+      `TOKEN_A` is given offline, after registration store the `TOKEN_C` which will be used in future exchanges.
 
       (In the sequence diagrams below we use relative paths as short resource identifiers to illustrate a point; please note that they should really be absolute URLs in any working implementation of OCPI)
 
@@ -56,7 +56,7 @@ tags:
       Due to its symmetric nature, the CPO and eMSP can be swapped in the registration sequence.
 
       <!--
-        Add some whitelines for PDF generation fix, TODO check in new PDf versions 
+        Add some whitelines for PDF generation fix, TODO check in new PDf versions
       -->
 
       &nbsp;
@@ -64,7 +64,7 @@ tags:
       &nbsp;
 
       <!--
-        Add some whitelines for PDF generation fix, TODO check in new PDf versions 
+        Add some whitelines for PDF generation fix, TODO check in new PDf versions
       -->
 
       ### 3.2 Updating to a newer version
@@ -84,17 +84,17 @@ tags:
 
       ### 3.5 Errors during registration
 
-      When the Server connects back to the client during the credentials registration, it might encounter problems. When this happens, the Server should add the status code: [3001](status_codes.md#3xxx-server-errors) in the response to the POST from the client. 
+      When the Server connects back to the client during the credentials registration, it might encounter problems. When this happens, the Server should add the status code: [3001](status_codes.md#3xxx-server-errors) in the response to the POST from the client.
 
       ### 3.6 Required endpoints not available
 
-      When two parties connect, it might happen that one of the parties expects a certain endpoint to be available at the other party. 
+      When two parties connect, it might happen that one of the parties expects a certain endpoint to be available at the other party.
 
-      For example: a CPO could only want to connect when the CDRs endpoint is available in an eMSP system. 
+      For example: a CPO could only want to connect when the CDRs endpoint is available in an eMSP system.
 
       In case the client is starting the credentials exchange process and cannot find the endpoints it expects, it is expected NOT to send the POST request with credentials to the server. Log a message/notify the administrator to contact the administrator of the server system.
 
-      In case the server, receiving the request from a client, cannot find the endpoints it expects, then it is expected to respond to the request with a status code: [3003](status_codes.md#3xxx-server-errors).    
+      In case the server, receiving the request from a client, cannot find the endpoints it expects, then it is expected to respond to the request with a status code: [3003](status_codes.md#3xxx-server-errors).
 consumes:
   - "application/json"
 produces:
@@ -102,6 +102,12 @@ produces:
 schemes:
   - "https"
   - "http"
+securityDefinitions:
+  Token:
+    type: apiKey
+    name: Authorization
+    in: header
+
 externalDocs:
   description: "Find out more about OCPI"
   url: "https://github.com/ocpi/ocpi"
@@ -111,10 +117,11 @@ externalDocs:
 #############
 
 paths:
-  /versions:
+  /ocpi/cpo/versions:
     get:
       tags:
         - "versions"
+      operationId: getVersionsInformation
       summary: "Version information"
       description: |
         This endpoint lists all the available OCPI versions and the corresponding URLs to where version specific details such as the supported endpoints can be found.
@@ -134,10 +141,11 @@ paths:
             items:
               $ref: "#/definitions/Version"
 
-  /{version}:
+  /ocpi/cpo/{version}:
     get:
       tags:
         - "version-details"
+      operationId: getVersionDetail
       summary: "Fetch information about the supported endpoints for this version."
       description: |
         This endpoint lists the supported endpoints and their URLs for a specific OCPI version. To notify the other party that the list of endpoints of your current version has changed, you can send a PUT request to the corresponding credentials endpoint (see the credentials chapter).
@@ -148,7 +156,7 @@ paths:
           in: "path"
           description: The version number
           required: true
-          type: "string"
+          type: string
 
       responses:
         200:
@@ -156,10 +164,11 @@ paths:
           schema:
             $ref: "#/definitions/VersionDetail"
 
-  /2.0/credentials:
+  /ocpi/cpo/2.0/credentials:
     post:
       tags:
         - credentials
+      operationId: postCredentials
       summary: Provides the server with a credentials object to access the client's system (i.e. register).
       description: |
         Provides the server with credentials to access the client's system. This credentials object also contains extra information about the client such as its business details.
@@ -187,20 +196,20 @@ paths:
 
 definitions:
   Version:
-    type: "object"
+    type: object
     properties:
       version:
-        type: "string"
+        type: string
         example: "2.1.1"
       url:
-        type: "string"
+        type: string
         example: "https://example.com/ocpi/cpo/2.1.1/"
 
   VersionDetail:
-    type: "object"
+    type: object
     properties:
       version:
-        type: "string"
+        type: string
         description: The Module identifiers for each endpoint are in the beginning of each *Module* chapter. The following table contains the list of modules in this version of OCPI. Most modules (except [Credentials & registration](credentials.md#credentials-endpoint)) are optional, but there might be dependencies between modules, if so that will be mentioned in the module description.
         example: "2.1.1"
       endpoints:
@@ -209,34 +218,34 @@ definitions:
           $ref: "#/definitions/Endpoint"
 
   Endpoint:
-    type: "object"
+    type: object
     properties:
       identifier:
         $ref: "#/definitions/ModuleID"
       url:
-        type: "string"
+        type: string
         example: "https://example.com/ocpi/cpo/2.0/credentials/"
 
   ModuleID:
-    type: "string"
-    enum: 
-     - cdrs
-     - commands
-     - credentials
-     - locations
-     - sessions
-     - tariffs
-     - tokens
+    type: string
+    enum:
+      - cdrs
+      - commands
+      - credentials
+      - locations
+      - sessions
+      - tariffs
+      - tokens
     example: "credentials"
 
   Credentials:
-    type: "object"
+    type: object
     description: |
-      The `party_id` and `country_code` are provided here to inform a server about the `party_id` and `country_code` a client will use when pushing [client owned objects](transport_and_format.md#client-owned-object-push). This helps a server determine the URLs a client will use when pushing a [client owned object](transport_and_format.md#client-owned-object-push). 
+      The `party_id` and `country_code` are provided here to inform a server about the `party_id` and `country_code` a client will use when pushing [client owned objects](transport_and_format.md#client-owned-object-push). This helps a server determine the URLs a client will use when pushing a [client owned object](transport_and_format.md#client-owned-object-push).
       The `country_code` is added the make certain the URL used when pushing a [client owned object](transport_and_format.md#client-owned-object-push) is unique, there might be multiple parties in the world with the same `party_id`, but the combination should always be unique.
       A party operating in multiple countries can always use the home country of the company for all connections. For example: an OCPI implementation might push EVSE IDs from a company for different countries, preventing an OCPI connection per country a company is operating in.
       The `party_id` and `country_code` give here, have no direct link with the eMI3 EVSE IDs and Contract IDs that might be used in the different OCPI modules. For example: an implementation OCPI might push EVSE IDs with a different eMI3 `spot operator`, then the OCPI `party_id` and/or different `country_code`.
-      
+
       ## Example
 
       ```json
@@ -258,36 +267,80 @@ definitions:
               "website": "http://example.com"
           }
       }
-      ```    
-    
+      ```
+
     properties:
       token:
-        type: "string"
+        type: string
+        maxLength: 64
         description: The token for the other party to authenticate in your system.
       url:
-        type: "string"
+        type: string
         description: The URL to your API versions endpoint.
-      business_details: 
-        description: Details of this party.
+      business_details:
         $ref: "#/definitions/BusinessDetails"
+        description: Details of this party.
       party_id:
-        type: "string"
+        type: string
+        pattern: ^[a-zA-Z0-9]{1,3}$
         description: CPO or eMSP ID of this party. (following the 15118 ISO standard).
       country_code:
-        type: "string"
+        type: string
+        pattern: ^[a-zA-Z]{2}$
         description: Country code of the country this party is operating in.
 
   BusinessDetails:
-    type: "object"
+    type: object
     properties:
       name:
         type: string
-      website: 
+        maxLength: 100
+      website:
         $ref: "#/definitions/URL"
-      logo: 
-        type: string
+      logo:
+        $ref: "#/definitions/Image"
 
-  URL: 
+  URL:
     type: string
     description: An URL a string(255) type following the [w3.org spec](http://www.w3.org/Addressing/URL/uri-spec.html).
-  
+
+  Image:
+    type: object
+    properties:
+      url:
+        $ref: "#/definitions/URL"
+        description: URL from where the image data can be fetched through a web browser.
+      thumbnail:
+        $ref: "#/definitions/URL"
+        description: URL from where a thumbnail of the image can be fetched through a webbrowser.
+      category:
+        $ref: "#/definitions/ImageCategory"
+        description: Describes what the image is used for.
+      type:
+        type: string
+        description: Image type like gif, jpeg, png, svg
+      width:
+        type: integer
+        description: int(5) Width of the full scale image
+      height:
+        type: integer
+        description:  int(5) Height of the full scale image
+
+  ImageCategory:
+    type: string
+    description: |
+      CHARGER   Photo of the physical device that contains one or more EVSEs.
+      ENTRANCE  Location entrance photo. Should show the car entrance to the location from street side.
+      LOCATION  Location overview photo.
+      NETWORK   logo of an associated roaming network to be displayed with the EVSE for example in lists, maps and detailed information view
+      OPERATOR  logo of the charge points operator, for example a municipality, to be displayed with the EVSEs detailed information view or in lists and maps, if no networkLogo is present
+      OTHER     Other
+      OWNER     logo of the charge points owner, for example a local store, to be displayed with the EVSEs detailed information view
+    enum:
+      - CHARGER
+      - ENTRANCE
+      - LOCATION
+      - NETWORK
+      - OPERATOR
+      - OTHER
+      - OWNER
