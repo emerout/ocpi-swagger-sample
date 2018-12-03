@@ -1,346 +1,1048 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  description: |
+  description: >
     # Overview
-    The Open Charge Point Interface (OCPI) enables a scalable, automated EV roaming setup between Charge Point Operators and e-Mobility Service Providers.
-    It supports authorization, charge point information exchange (including live status updates and transaction events), charge detail record exchange, remote charge point commands and, finally, the exchange of smart-charging commands between parties.
+
+    The Open Charge Point Interface (OCPI) enables a scalable, automated EV
+    roaming setup between Charge Point Operators and e-Mobility Service
+    Providers.
+
+    It supports authorization, charge point information exchange (including live
+    status updates and transaction events), charge detail record exchange,
+    remote charge point commands and, finally, the exchange of smart-charging
+    commands between parties.
+
 
     ## OCPI 2.1.1
-    During implementation of OCPI 2.1, a number of bugs in the message definition were found.
-    This forced us to release a bug fix: OCPI 2.1.1.
-    With the release of OCPI 2.1.1: OCPI 2.1 is deprecated, 2.1 should no longer used and replaced by 2.1.1.
-    It should be a small effort to upgrade an existing 2.1 implementation to 2.1.1.
 
-    For more information on message level changes see [changelog](changelog.md#changelog).
+    During implementation of OCPI 2.1, a number of bugs in the message
+    definition were found.
+
+    This forced us to release a bug fix: OCPI 2.1.1.
+
+    With the release of OCPI 2.1.1: OCPI 2.1 is deprecated, 2.1 should no longer
+    used and replaced by 2.1.1.
+
+    It should be a small effort to upgrade an existing 2.1 implementation to
+    2.1.1.
+
+
+    For more information on message level changes see
+    [changelog](changelog.md#changelog).
+
 
 
     ## Introduction and background
-    The Open Charge Point Interface (OCPI) enables a scalable, automated EV roaming setup between Charge Point Operators and e-Mobility Service Providers. It supports authorization, charge point information exchange (including live status updates and transaction events), charge detail record exchange, remote charge point commands and, finally, the exchange of smart-charging commands between parties.
 
-    It offers market participants in EV an attractive and scalable solution for (international) roaming between networks, avoiding the costs and innovation-limiting complexities involved with today's non-automated solutions or with central roaming hubs.
-    As such it helps to enable EV drivers to charge everywhere in a fully-informed way, helps the market to develop quickly and helps market players to execute their business models in the best way.
+    The Open Charge Point Interface (OCPI) enables a scalable, automated EV
+    roaming setup between Charge Point Operators and e-Mobility Service
+    Providers. It supports authorization, charge point information exchange
+    (including live status updates and transaction events), charge detail record
+    exchange, remote charge point commands and, finally, the exchange of
+    smart-charging commands between parties.
+
+
+    It offers market participants in EV an attractive and scalable solution for
+    (international) roaming between networks, avoiding the costs and
+    innovation-limiting complexities involved with today's non-automated
+    solutions or with central roaming hubs.
+
+    As such it helps to enable EV drivers to charge everywhere in a
+    fully-informed way, helps the market to develop quickly and helps market
+    players to execute their business models in the best way.
+
 
     What does it offer (main functionalities):
+
     * A good roaming system (for bilateral usage and/or via a hub).
+
     * Real-time information about location, availability and price.
-    * A uniform way of exchanging data (Notification Data Records and Charge Data Records), before during and after the transaction.
-    * Remote mobile support to access any charge station without pre-registration.
 
-    Starting in 2009, e-laad foundation and the predecessor of the eViolin association specified 2 standards in order to retrieve charge point details and active state. These are called the VAS interface and the Amsterdam interface. In this same period, a CDR format for the exchange of charge sessions between eViolin members was defined. This format is currently in use by the majority of the eViolin members. (eViolin is the branch organisation for EV operators and service providers in NL and responsible for national roaming and issuing of ID’s). This resulted in 2014 in the development of OCPI.
+    * A uniform way of exchanging data (Notification Data Records and Charge
+    Data Records), before during and after the transaction.
 
-    An international group of companies already supports OCPI. Initiators are EV Box, The New Motion, ElaadNL, BeCharged, Greenflux and Last Mile Solutions. Other participants include Next Charge, Freshmile, Plugsurfing, Charge-partner, Hubject, e-clearing.net, IHomer and Siemens. Several other major organizations and roaming platforms are interested in participating. The Netherlands Knowledge Platform for Charging Infrastructure (NKL) facilitates and coordinates this project to guarantee progress and ensure development and results. Part of this project is to find a place to continue development in the future.
+    * Remote mobile support to access any charge station without
+    pre-registration.
 
-    This document describes a combined set of standards based on the work done in the past. Next to that, the evolution of these standards and their use is taken into account and some elements have been updated to match nowadays use.
 
-  version: "2.1.1"
-  title: "OCPI Specification API"
-host: "example.com"
-basePath: "/"
+    Starting in 2009, e-laad foundation and the predecessor of the eViolin
+    association specified 2 standards in order to retrieve charge point details
+    and active state. These are called the VAS interface and the Amsterdam
+    interface. In this same period, a CDR format for the exchange of charge
+    sessions between eViolin members was defined. This format is currently in
+    use by the majority of the eViolin members. (eViolin is the branch
+    organisation for EV operators and service providers in NL and responsible
+    for national roaming and issuing of ID’s). This resulted in 2014 in the
+    development of OCPI.
+
+
+    An international group of companies already supports OCPI. Initiators are EV
+    Box, The New Motion, ElaadNL, BeCharged, Greenflux and Last Mile Solutions.
+    Other participants include Next Charge, Freshmile, Plugsurfing,
+    Charge-partner, Hubject, e-clearing.net, IHomer and Siemens. Several other
+    major organizations and roaming platforms are interested in participating.
+    The Netherlands Knowledge Platform for Charging Infrastructure (NKL)
+    facilitates and coordinates this project to guarantee progress and ensure
+    development and results. Part of this project is to find a place to continue
+    development in the future.
+
+
+    This document describes a combined set of standards based on the work done
+    in the past. Next to that, the evolution of these standards and their use is
+    taken into account and some elements have been updated to match nowadays
+    use.
+  version: 2.1.1
+  title: OCPI Specification API
+
 tags:
-  - name: "versions"
-  - name: "version-details"
-  - name: "credentials"
-    description: |
-      ## 3 Use cases
-
-      ### 3.1 Registration
-
-      To register a CPO in an eMSP platform (or vice versa), the CPO must create a unique token that can be used for authenticating the eMSP. This token along with the versions endpoint should be sent to the eMSP in a secure way that is outside the scope of this protocol.
-
-      `TOKEN_A` is given offline, after registration store the `TOKEN_C` which will be used in future exchanges.
-
-      (In the sequence diagrams below we use relative paths as short resource identifiers to illustrate a point; please note that they should really be absolute URLs in any working implementation of OCPI)
-
-      ![the OCPI registration process](https://github.com/ocpi/ocpi/raw/master/data/registration-sequence.png)
-
-      Due to its symmetric nature, the CPO and eMSP can be swapped in the registration sequence.
-
-      <!--
-        Add some whitelines for PDF generation fix, TODO check in new PDf versions
-      -->
-
-      &nbsp;
-
-      &nbsp;
-
-      <!--
-        Add some whitelines for PDF generation fix, TODO check in new PDf versions
-      -->
-
-      ### 3.2 Updating to a newer version
-
-      At some point both parties will have implemented a newer OCPI version. To start using the newer version, one party has to send a PUT request to the credentials endpoint of the other party.
-
-      ![the OCPI update process](https://github.com/ocpi/ocpi/raw/master/data/update-sequence.png)
-
-
-      ### 3.3 Changing endpoints for the current version
-
-      This can be done by following the update procedure for the same version. By sending a PUT request to the credentials endpoint of this version, the other party will fetch and store the corresponding set of endpoints.
-
-      ### 3.4 Updating the credentials and resetting the token
-
-      The credentials (or parts thereof, such as the token) can be updated by sending the new credentials via a PUT request to the credentials endpoint of the current version, similar to the update procedure described above.
-
-      ### 3.5 Errors during registration
-
-      When the Server connects back to the client during the credentials registration, it might encounter problems. When this happens, the Server should add the status code: [3001](status_codes.md#3xxx-server-errors) in the response to the POST from the client.
-
-      ### 3.6 Required endpoints not available
-
-      When two parties connect, it might happen that one of the parties expects a certain endpoint to be available at the other party.
-
-      For example: a CPO could only want to connect when the CDRs endpoint is available in an eMSP system.
-
-      In case the client is starting the credentials exchange process and cannot find the endpoints it expects, it is expected NOT to send the POST request with credentials to the server. Log a message/notify the administrator to contact the administrator of the server system.
-
-      In case the server, receiving the request from a client, cannot find the endpoints it expects, then it is expected to respond to the request with a status code: [3003](status_codes.md#3xxx-server-errors).
-consumes:
-  - "application/json"
-produces:
-  - "application/json"
-schemes:
-  - "https"
-  - "http"
-securityDefinitions:
-  Token:
-    type: apiKey
-    name: Authorization
-    in: header
+  - name: versions
+  - name: version-details
+  - name: credentials
+  - name: locations
 
 externalDocs:
-  description: "Find out more about OCPI"
-  url: "https://github.com/ocpi/ocpi"
-
-#############
-### Endpoints
-#############
+  description: Find out more about OCPI
+  url: 'https://github.com/ocpi/ocpi'
 
 paths:
   /ocpi/cpo/versions:
     get:
       tags:
-        - "versions"
+        - versions
       operationId: getVersionsInformation
-      summary: "Version information"
-      description: |
-        This endpoint lists all the available OCPI versions and the corresponding URLs to where version specific details such as the supported endpoints can be found.
-        Example endpoint structure: `ocpi/cpo/versions` and `/ocpi/emsp/versions`
-        The exact URL to the implemented version endpoint should be given (offline) to parties that interface with your OCPI implementation, this endpoint is the starting point for discovering locations of the different modules and version of OCPI that have been implemented.
+      summary: Version information
+      description: >
+        This endpoint lists all the available OCPI versions and the
+        corresponding URLs to where version specific details such as the
+        supported endpoints can be found.
+
+        Example endpoint structure: `ocpi/cpo/versions` and
+        `/ocpi/emsp/versions`
+
+        The exact URL to the implemented version endpoint should be given
+        (offline) to parties that interface with your OCPI implementation, this
+        endpoint is the starting point for discovering locations of the
+        different modules and version of OCPI that have been implemented.
+
         Both the CPO and the eMSP must have this endpoint.
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-
       responses:
-        200:
+        '200':
           description: OK
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Version"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionsResponse'
 
-  /ocpi/cpo/{version}:
+  '/ocpi/cpo/{version}':
     get:
       tags:
-        - "version-details"
+        - version-details
       operationId: getVersionDetail
-      summary: "Fetch information about the supported endpoints for this version."
-      description: |
-        This endpoint lists the supported endpoints and their URLs for a specific OCPI version. To notify the other party that the list of endpoints of your current version has changed, you can send a PUT request to the corresponding credentials endpoint (see the credentials chapter).
+      summary: Fetch information about the supported endpoints for this version.
+      description: >
+        This endpoint lists the supported endpoints and their URLs for a
+        specific OCPI version. To notify the other party that the list of
+        endpoints of your current version has changed, you can send a PUT
+        request to the corresponding credentials endpoint (see the credentials
+        chapter).
 
         Both the CPO and the eMSP must have this endpoint.
       parameters:
-        - name: "version"
-          in: "path"
+        - name: version
+          in: path
           description: The version number
           required: true
-          type: string
-
-      responses:
-        200:
-          description: OK
           schema:
-            $ref: "#/definitions/VersionDetail"
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionDetail'
 
   /ocpi/cpo/2.0/credentials:
+    get:
+      tags:
+        - credentials
+      operationId: getCredentials
+      summary: >-
+        Retrieves the credentials object to access the server's platform.
+      description: >
+        Retrieves the credentials object to access the server's platform. The request body is empty, the response contains the credentials object to access the server's platform. This credentials object also contains extra information about the server such as its business details.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credentials'
+        '404':
+          description: Not found
+
     post:
       tags:
         - credentials
       operationId: postCredentials
-      summary: Provides the server with a credentials object to access the client's system (i.e. register).
-      description: |
-        Provides the server with credentials to access the client's system. This credentials object also contains extra information about the client such as its business details.
+      summary: >-
+        Provides the server with a credentials object to access the client's
+        system (i.e. register).
+      description: >
+        Provides the server with credentials to access the client's system. This
+        credentials object also contains extra information about the client such
+        as its business details.
 
-        A `POST` initiates the registration process for this endpoint's version. The server must also fetch the client's endpoints for this version.
+        A `POST` initiates the registration process for this endpoint's version.
+        The server must also fetch the client's endpoints for this version.
 
-        If successful, the server must generate a new token and respond with the client's new credentials to access the server's system. The credentials object in the response also contains extra information about the server such as its business details.
+        If successful, the server must generate a new token and respond with the
+        client's new credentials to access the server's system. The credentials
+        object in the response also contains extra information about the server
+        such as its business details.
 
-        This must return a `HTTP status code 405: method not allowed` if the client was already registered.
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Credentials'
+        This must return a `HTTP status code 405: method not allowed` if the
+        client was already registered.
       responses:
         '200':
           description: Created
         '405':
           description: The client was already registered
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
 
-#############
-### Definitions
-#############
+    put:
+      tags:
+        - credentials
+      operationId: putCredentials
+      summary: >-
+        Provides the server with updated credentials to access the client's system.
+      description: >
+        Provides the server with updated credentials to access the client's system. This credentials object also contains extra information about the client such as its business details.
 
-definitions:
-  Version:
-    type: object
-    properties:
-      version:
-        type: string
-        example: "2.1.1"
-      url:
-        type: string
-        example: "https://example.com/ocpi/cpo/2.1.1/"
+        A PUT will switch to the version that contains this credentials endpoint if it's different from the current version. The server must fetch the client's endpoints again, even if the version has not changed.
 
-  VersionDetail:
-    type: object
-    properties:
-      version:
-        type: string
-        description: The Module identifiers for each endpoint are in the beginning of each *Module* chapter. The following table contains the list of modules in this version of OCPI. Most modules (except [Credentials & registration](credentials.md#credentials-endpoint)) are optional, but there might be dependencies between modules, if so that will be mentioned in the module description.
-        example: "2.1.1"
-      endpoints:
-        type: "array"
-        items:
-          $ref: "#/definitions/Endpoint"
+        If successful, the server must generate a new token for the client and respond with the client's updated credentials to access the server's system. The credentials object in the response also contains extra information about the server such as its business details.
 
-  Endpoint:
-    type: object
-    properties:
-      identifier:
-        $ref: "#/definitions/ModuleID"
-      url:
-        type: string
-        example: "https://example.com/ocpi/cpo/2.0/credentials/"
+        This must return a HTTP status code 405: method not allowed if the client was not registered yet.
+      responses:
+        '200':
+          description: OK
+        '405':
+          description: The client was not registered yet.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
 
-  ModuleID:
-    type: string
-    enum:
-      - cdrs
-      - commands
-      - credentials
-      - locations
-      - sessions
-      - tariffs
-      - tokens
-    example: "credentials"
+    delete:
+      tags:
+        - credentials
+      operationId: deleteCredentials
+      summary: >-
+        Informs the server that its credentials to access the client's system are now invalid and can no longer be used.
+      description: >
+        Informs the server that its credentials to access the client's system are now invalid and can no longer be used. Both parties must end any automated communication. This is the unregistration process.
 
-  Credentials:
-    type: object
-    description: |
-      The `party_id` and `country_code` are provided here to inform a server about the `party_id` and `country_code` a client will use when pushing [client owned objects](transport_and_format.md#client-owned-object-push). This helps a server determine the URLs a client will use when pushing a [client owned object](transport_and_format.md#client-owned-object-push).
-      The `country_code` is added the make certain the URL used when pushing a [client owned object](transport_and_format.md#client-owned-object-push) is unique, there might be multiple parties in the world with the same `party_id`, but the combination should always be unique.
-      A party operating in multiple countries can always use the home country of the company for all connections. For example: an OCPI implementation might push EVSE IDs from a company for different countries, preventing an OCPI connection per country a company is operating in.
-      The `party_id` and `country_code` give here, have no direct link with the eMI3 EVSE IDs and Contract IDs that might be used in the different OCPI modules. For example: an implementation OCPI might push EVSE IDs with a different eMI3 `spot operator`, then the OCPI `party_id` and/or different `country_code`.
+        This must return a HTTP status code 405: method not allowed if the client was not registered.
+      responses:
+        '200':
+          description: OK
+        '405':
+          description: The client was not registered yet.
 
-      ## Example
+  /ocpi/cpo/2.0/locations:
+    get:
+      tags:
+        - locations
+      operationId: getLocation
+      summary: >-
+        Retrieves the credentials object to access the server's platform.
+      description: >
+        Retrieves the credentials object to access the server's platform. The request body is empty, the response contains the credentials object to access the server's platform. This credentials object also contains extra information about the server such as its business details.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        '404':
+          description: Not found
 
-      ```json
-      {
-          "url": "https://example.com/ocpi/cpo/",
-          "token": "ebf3b399-779f-4497-9b9d-ac6ad3cc44d2",
-          "party_id": "EXA",
-          "country_code": "NL",
-          "business_details": {
-              "name": "Example Operator",
-              "logo": {
-                  "url": "https://example.com/img/logo.jpg",
-                  "thumbnail": "https://example.com/img/logo_thumb.jpg",
-                  "category": "OPERATOR",
-                  "type": "jpeg",
-                  "width": 512,
-                  "height": 512
-              },
-              "website": "http://example.com"
-          }
-      }
-      ```
 
-    properties:
-      token:
-        type: string
-        maxLength: 64
-        description: The token for the other party to authenticate in your system.
-      url:
-        type: string
-        description: The URL to your API versions endpoint.
-      business_details:
-        $ref: "#/definitions/BusinessDetails"
-        description: Details of this party.
-      party_id:
-        type: string
-        pattern: ^[a-zA-Z0-9]{1,3}$
-        description: CPO or eMSP ID of this party. (following the 15118 ISO standard).
-      country_code:
-        type: string
-        pattern: ^[a-zA-Z]{2}$
-        description: Country code of the country this party is operating in.
+servers:
+  - url: 'https://example.com/'
+  - url: 'http://example.com/'
 
-  BusinessDetails:
-    type: object
-    properties:
-      name:
-        type: string
-        maxLength: 100
-      website:
-        $ref: "#/definitions/URL"
-      logo:
-        $ref: "#/definitions/Image"
+components:
+  securitySchemes:
+    Token:
+      type: apiKey
+      name: Authorization
+      in: header
 
-  URL:
-    type: string
-    description: An URL a string(255) type following the [w3.org spec](http://www.w3.org/Addressing/URL/uri-spec.html).
+  schemas:
+    Version:
+      type: object
+      properties:
+        version:
+          type: string
+          example: 2.1.1
+        url:
+          type: string
+          example: 'https://example.com/ocpi/cpo/2.1.1/'
 
-  Image:
-    type: object
-    properties:
-      url:
-        $ref: "#/definitions/URL"
-        description: URL from where the image data can be fetched through a web browser.
-      thumbnail:
-        $ref: "#/definitions/URL"
-        description: URL from where a thumbnail of the image can be fetched through a webbrowser.
-      category:
-        $ref: "#/definitions/ImageCategory"
-        description: Describes what the image is used for.
-      type:
-        type: string
-        description: Image type like gif, jpeg, png, svg
-      width:
-        type: integer
-        description: int(5) Width of the full scale image
-      height:
-        type: integer
-        description:  int(5) Height of the full scale image
+    VersionDetail:
+      type: object
+      properties:
+        version:
+          type: string
+          description: >-
+            The Module identifiers for each endpoint are in the beginning of
+            each *Module* chapter. The following table contains the list of
+            modules in this version of OCPI. Most modules (except [Credentials &
+            registration](credentials.md#credentials-endpoint)) are optional,
+            but there might be dependencies between modules, if so that will be
+            mentioned in the module description.
+          example: 2.1.1
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
 
-  ImageCategory:
-    type: string
-    description: |
-      CHARGER   Photo of the physical device that contains one or more EVSEs.
-      ENTRANCE  Location entrance photo. Should show the car entrance to the location from street side.
-      LOCATION  Location overview photo.
-      NETWORK   logo of an associated roaming network to be displayed with the EVSE for example in lists, maps and detailed information view
-      OPERATOR  logo of the charge points operator, for example a municipality, to be displayed with the EVSEs detailed information view or in lists and maps, if no networkLogo is present
-      OTHER     Other
-      OWNER     logo of the charge points owner, for example a local store, to be displayed with the EVSEs detailed information view
-    enum:
-      - CHARGER
-      - ENTRANCE
-      - LOCATION
-      - NETWORK
-      - OPERATOR
-      - OTHER
-      - OWNER
+    Endpoint:
+      type: object
+      properties:
+        identifier:
+          $ref: '#/components/schemas/ModuleID'
+        url:
+          type: string
+          example: 'https://example.com/ocpi/cpo/2.0/credentials/'
+
+    ModuleID:
+      type: string
+      enum:
+        - cdrs
+        - commands
+        - credentials
+        - locations
+        - sessions
+        - tariffs
+        - tokens
+      example: credentials
+
+    Credentials:
+      type: object
+      description: >
+        The `party_id` and `country_code` are provided here to inform a server
+        about the `party_id` and `country_code` a client will use when pushing
+        [client owned
+        objects](transport_and_format.md#client-owned-object-push). This helps a
+        server determine the URLs a client will use when pushing a [client owned
+        object](transport_and_format.md#client-owned-object-push).
+
+        The `country_code` is added the make certain the URL used when pushing a
+        [client owned object](transport_and_format.md#client-owned-object-push)
+        is unique, there might be multiple parties in the world with the same
+        `party_id`, but the combination should always be unique.
+
+        A party operating in multiple countries can always use the home country
+        of the company for all connections. For example: an OCPI implementation
+        might push EVSE IDs from a company for different countries, preventing
+        an OCPI connection per country a company is operating in.
+
+        The `party_id` and `country_code` give here, have no direct link with
+        the eMI3 EVSE IDs and Contract IDs that might be used in the different
+        OCPI modules. For example: an implementation OCPI might push EVSE IDs
+        with a different eMI3 `spot operator`, then the OCPI `party_id` and/or
+        different `country_code`.
+
+        ## Example
+
+        ```json
+        {
+            "url": "https://example.com/ocpi/cpo/",
+            "token": "ebf3b399-779f-4497-9b9d-ac6ad3cc44d2",
+            "party_id": "EXA",
+            "country_code": "NL",
+            "business_details": {
+                "name": "Example Operator",
+                "logo": {
+                    "url": "https://example.com/img/logo.jpg",
+                    "thumbnail": "https://example.com/img/logo_thumb.jpg",
+                    "category": "OPERATOR",
+                    "type": "jpeg",
+                    "width": 512,
+                    "height": 512
+                },
+                "website": "http://example.com"
+            }
+        }
+
+        ```
+      properties:
+        token:
+          type: string
+          maxLength: 64
+          description: The token for the other party to authenticate in your system.
+        url:
+          type: string
+          description: The URL to your API versions endpoint.
+        business_details:
+          $ref: '#/components/schemas/BusinessDetails'
+          description: Details of this party.
+        party_id:
+          type: string
+          pattern: '^[a-zA-Z0-9]{1,3}$'
+          description: CPO or eMSP ID of this party. (following the 15118 ISO standard).
+        country_code:
+          type: string
+          pattern: '^[a-zA-Z]{2}$'
+          description: Country code of the country this party is operating in.
+
+    BusinessDetails:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        website:
+          $ref: '#/components/schemas/URL'
+        logo:
+          $ref: '#/components/schemas/Image'
+
+    URL:
+      type: string
+      description: >-
+        An URL a string(255) type following the [w3.org
+        spec](http://www.w3.org/Addressing/URL/uri-spec.html).
+
+    Image:
+      type: object
+      properties:
+        url:
+          $ref: '#/components/schemas/URL'
+          description: URL from where the image data can be fetched through a web browser.
+        thumbnail:
+          $ref: '#/components/schemas/URL'
+          description: >-
+            URL from where a thumbnail of the image can be fetched through a
+            webbrowser.
+        category:
+          $ref: '#/components/schemas/ImageCategory'
+          description: Describes what the image is used for.
+        type:
+          type: string
+          description: 'Image type like gif, jpeg, png, svg'
+        width:
+          type: integer
+          description: int(5) Width of the full scale image
+        height:
+          type: integer
+          description: int(5) Height of the full scale image
+
+    ImageCategory:
+      type: string
+      description: >
+        CHARGER   Photo of the physical device that contains one or more EVSEs.
+
+        ENTRANCE  Location entrance photo. Should show the car entrance to the
+        location from street side.
+
+        LOCATION  Location overview photo.
+
+        NETWORK   logo of an associated roaming network to be displayed with the
+        EVSE for example in lists, maps and detailed information view
+
+        OPERATOR  logo of the charge points operator, for example a
+        municipality, to be displayed with the EVSEs detailed information view
+        or in lists and maps, if no networkLogo is present
+
+        OTHER     Other
+
+        OWNER     logo of the charge points owner, for example a local store, to
+        be displayed with the EVSEs detailed information view
+      enum:
+        - CHARGER
+        - ENTRANCE
+        - LOCATION
+        - NETWORK
+        - OPERATOR
+        - OTHER
+        - OWNER
+
+    LocationType:
+      type: string
+      description: >-
+        ON_STREET Parking in public space.
+        PARKING_GARAGE Multistorey car park.
+        UNDERGROUND_GARAGE Multistorey car park, mainly underground.
+        PARKING_LOT A cleared area that is intended for parking vehicles, i.e. at super markets, bars, etc.
+        OTHER None of the given possibilities.
+        UNKNOWN Parking location type is not known by the operator (default).
+      enum:
+        - ON_STREET
+        - PARKING_GARAGE
+        - UNDERGROUND_GARAGE
+        - PARKING_LOT
+        - OTHER
+        - UNKNOWN
+
+
+    GeoLocation:
+      type: object
+      properties:
+        latitude:
+          type: string
+          pattern: '-?[0-9]{1,2}\.[0-9]{6}'
+          #          required: true
+          description: 'Latitude of the point in decimal degree. Example: 50.770774. Decimal separator: "." Regex: -?[0-9]{1,2}\.[0-9]{6}'
+        longitude:
+          type: string
+          #          required: true
+          pattern: '-?[0-9]{1,3}\.[0-9]{6}'
+          description: 'Longitude of the point in decimal degree. Example: -126.104965. Decimal separator: "." Regex: -?[0-9]{1,3}\.[0-9]{6}'
+
+    AdditionalGeoLocation:
+      allOf:
+        - type: object
+          properties:
+            name:
+              type: object
+              $ref: '#/components/schemas/DisplayText'
+        - $ref: '#/components/schemas/GeoLocation'
+
+    DisplayText:
+      type: object
+      properties:
+        language:
+          type: string
+          pattern: '^[A-Za-z]{2}$'
+          #          required: true
+          description: Language Code ISO 639-1
+        text:
+          type: string
+          pattern: '^.{1,255}$'
+          #          required: true
+          description: Text to be displayed to a end user. No markup, html etc. allowed.
+
+    Status:
+      type: string
+      description: |
+        | Value              | Description                                                                                     |
+        |--------------------|-------------------------------------------------------------------------------------------------|
+        | AVAILABLE          | The EVSE/Connector is able to start a new charging session.                                     |
+        | BLOCKED            | The EVSE/Connector is not accessible because of a physical barrier, i.e. a car.                 |
+        | CHARGING           | The EVSE/Connector is in use.                                                                   |
+        | INOPERATIVE        | The EVSE/Connector is not yet active or it is no longer available (deleted).                    |
+        | OUTOFORDER         | The EVSE/Connector is currently out of order.                                                   |
+        | PLANNED            | The EVSE/Connector is planned, will be operating soon                                           |
+        | REMOVED            | The EVSE/Connector/charge point is discontinued/removed.                                        |
+        | RESERVED           | The EVSE/Connector is reserved for a particular EV driver and is unavailable for other drivers. |
+        | UNKNOWN            | No status information available. (Also used when offline)                                       |      enum:
+      enum:
+        - AVAILABLE
+        - BLOCKED
+        - CHARGING
+        - INOPERATIVE
+        - OUTOFORDER
+        - PLANNED
+        - REMOVED
+        - RESERVED
+        - UNKNOWN
+
+    StatusSchedule:
+      type: object
+      properties:
+        period_begin:
+          type: string
+          $ref: '#/components/schemas/DateTime'
+          description: Begin of the scheduled period.
+        period_end:
+          type: string
+          $ref: '#/components/schemas/DateTime'
+          description: End of the scheduled period, if known.
+        status:
+          type: object
+          $ref: '#/components/schemas/Status'
+          description: value during the scheduled period.
+      required:
+        - period_begin
+        - status
+
+    DateTime:
+      type: string
+      pattern: '^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]+)?(Z)?$'
+      description: All timestamps are formatted as string(25) using the combined date and time format from the ISO 8601 standard. All timestamps SHALL be in UTC. The absence of the timezone designator implies a UTC timestamp.
+
+    Capability:
+      type: string
+      description: |
+        | Value                                    | Description                                          |
+        |------------------------------------------|------------------------------------------------------|
+        | CHARGING_PROFILE_CAPABLE                 | The EVSE supports charging profiles. Sending Charging Profiles is not yet supported by OCPI. |
+        | CREDIT_CARD_PAYABLE                      | Charging at this EVSE can be payed with credit card. |
+        | REMOTE_START_STOP_CAPABLE                | The EVSE can remotely be started/stopped.            |
+        | RESERVABLE                               | The EVSE can be reserved.                            |
+        | RFID_READER                              | Charging at this EVSE can be authorized with a RFID token  |
+        | UNLOCK_CAPABLE                           | Connectors have mechanical lock that can be requested by the eMSP to be unlocked. |
+      enum:
+        - CHARGING_PROFILE_CAPABLE
+        - CREDIT_CARD_PAYABLE
+        - REMOTE_START_STOP_CAPABLE
+        - RESERVABLE
+        - RFID_READER
+        - UNLOCK_CAPABLE
+
+    ConnectorFormat:
+      type: string
+      description: |
+        | Value  | Description |
+        |--------|------------------------------------------------------------------|
+        | SOCKET | The connector is a socket; the EV user needs to bring a fitting plug. |
+        | CABLE  | The connector is an attached cable; the EV users car needs to have a fitting inlet. |
+      enum:
+        - SOCKET
+        - CABLE
+
+    ConnectorType:
+      type: string
+      description: |
+        | Value                 | Description |
+        |-----------------------|-------------------------------------------------------------------|
+        | CHADEMO               | The connector type is CHAdeMO, DC |
+        | DOMESTIC_A            | Standard/Domestic household, type "A", NEMA 1-15, 2 pins |
+        | DOMESTIC_B            | Standard/Domestic household, type "B", NEMA 5-15, 3 pins |
+        | DOMESTIC_C            | Standard/Domestic household, type "C", CEE 7/17, 2 pins |
+        | DOMESTIC_D            | Standard/Domestic household, type "D", 3 pin |
+        | DOMESTIC_E            | Standard/Domestic household, type "E", CEE 7/5 3 pins |
+        | DOMESTIC_F            | Standard/Domestic household, type "F", CEE 7/4, Schuko, 3 pins |
+        | DOMESTIC_G            | Standard/Domestic household, type "G", BS 1363, Commonwealth, 3 pins |
+        | DOMESTIC_H            | Standard/Domestic household, type "H", SI-32, 3 pins |
+        | DOMESTIC_I            | Standard/Domestic household, type "I", AS 3112, 3 pins |
+        | DOMESTIC_J            | Standard/Domestic household, type "J", SEV 1011, 3 pins |
+        | DOMESTIC_K            | Standard/Domestic household, type "K", DS 60884-2-D1, 3 pins |
+        | DOMESTIC_L            | Standard/Domestic household, type "L", CEI 23-16-VII, 3 pins |
+        | IEC_60309_2_single_16 | IEC 60309-2 Industrial Connector single phase 16  Amperes (usually blue) |
+        | IEC_60309_2_three_16  | IEC 60309-2 Industrial Connector three phase 16  Amperes (usually red) |
+        | IEC_60309_2_three_32  | IEC 60309-2 Industrial Connector three phase 32  Amperes (usually red) |
+        | IEC_60309_2_three_64  | IEC 60309-2 Industrial Connector three phase 64  Amperes (usually red) |
+        | IEC_62196_T1          | IEC 62196 Type 1 "SAE J1772" |
+        | IEC_62196_T1_COMBO    | Combo Type 1 based, DC |
+        | IEC_62196_T2          | IEC 62196 Type 2 "Mennekes" |
+        | IEC_62196_T2_COMBO    | Combo Type 2 based, DC |
+        | IEC_62196_T3A         | IEC 62196 Type 3A |
+        | IEC_62196_T3C         | IEC 62196 Type 3C "Scame" |
+        | TESLA_R               | Tesla Connector "Roadster"-type (round, 4 pin) |
+        | TESLA_S               | Tesla Connector "Model-S"-type (oval, 5 pin) |
+      enum:
+        - CHADEMO
+        - DOMESTIC_A
+        - DOMESTIC_B
+        - DOMESTIC_C
+        - DOMESTIC_D
+        - DOMESTIC_E
+        - DOMESTIC_F
+        - DOMESTIC_G
+        - DOMESTIC_H
+        - DOMESTIC_I
+        - DOMESTIC_J
+        - DOMESTIC_K
+        - DOMESTIC_L
+        - IEC_60309_2_single_16
+        - IEC_60309_2_three_16
+        - IEC_60309_2_three_32
+        - IEC_60309_2_three_64
+        - IEC_62196_T1
+        - IEC_62196_T1_COMBO
+        - IEC_62196_T2
+        - IEC_62196_T2_COMBO
+        - IEC_62196_T3A
+        - IEC_62196_T3C
+        - TESLA_R
+        - TESLA_S
+
+    EnergyMix:
+      type: object
+      properties:
+        is_green_energy:
+          type: boolean
+          description: True if 100% from regenerative sources. (CO2 and nuclear waste is zero)                         |
+        energy_sources:
+          type: object
+          $ref: '#/components/schemas/EnergySource'
+          description: Key-value pairs (enum + percentage) of energy sources of this location's tariff.                |
+        environ_impact:
+          type: object
+          $ref: '#/components/schemas/EnvironmentalImpact'
+          description: Key-value pairs (enum + percentage) of nuclear waste and CO2 exhaust of this location's tariff. |
+        supplier_name:
+          type: string
+          pattern: '^.{1,64}$'
+          description: Name of the energy supplier, delivering the energy for this location or tariff.*                |
+        energy_product_name:
+          type: string
+          pattern: '^.{1,64}$'
+          description: Name of the energy suppliers product/tariff plan used at this location.*                        |
+      required:
+        - is_green_energy
+
+    EnergySource:
+      type: object
+      properties:
+        source:
+          type: string
+          $ref: '#/components/schemas/EnergySourceCategory'
+          description:  The type of energy source.
+        percentage:
+          type: integer
+          description: Percentage of this source (0-100) in the mix.
+
+    EnergySourceCategory:
+      type: string
+      description: |
+        | Value                  | Description                                  |
+        |------------------------|----------------------------------------------|
+        | NUCLEAR                | Nuclear power sources.                       |
+        | GENERAL_FOSSIL         | All kinds of fossil power sources.           |
+        | COAL                   | Fossil power from coal.                      |
+        | GAS                    | Fossil power from gas.                       |
+        | GENERAL_GREEN          | All kinds of regenerative power sources.     |
+        | SOLAR                  | Regenerative power from PV.                  |
+        | WIND                   | Regenerative power from wind turbines.       |
+        | WATER                  | Regenerative power from water turbines.      |
+      enum:
+        - NUCLEAR
+        - GENERAL_FOSSIL
+        - COAL
+        - GAS
+        - GENERAL_GREEN
+        - SOLAR
+        - WIND
+        - WATER
+        -
+    EnvironmentalImpact:
+      type: object
+      properties:
+        source:
+          type: string
+          $ref: '#/components/schemas/EnvironmentalImpactCategory'
+          description:  The category of this value.
+        amount:
+          type: integer
+          description: Amount of this portion in g/kWh.
+
+    EnvironmentalImpactCategory:
+      type: string
+      description: |
+        | Value                      | Description                                                                           |
+        |----------------------------|---------------------------------------------------------------------------------------|
+        | NUCLEAR_WASTE              | Produced nuclear waste in gramms per kilowatthour.                                    |
+        | CARBON_DIOXIDE             | Exhausted carbon dioxide in gramms per kilowarrhour.                                  |
+      enum:
+        - NUCLEAR_WASTE
+        - CARBON_DIOXIDE
+
+    Connector:
+      type: object
+      properties:
+       id:
+         type: string
+         pattern: '^.{1,36}$'
+         description: Identifier of the connector within the EVSE. Two connectors may have the same id as long as they do not belong to the same *EVSE* object. |
+       standard:
+         type: string
+         $ref: '#/components/schemas/ConnectorType'
+         description: The standard of the installed connector.
+       format:
+         type: string
+         $ref: '#/components/schemas/ConnectorFormat'
+         description: The format (socket/cable) of the installed connector.
+       power_type:
+         type: string
+         $ref: '#/components/schemas/PowerType'                                                             |
+       voltage:
+         type: integer
+         description: Voltage of the connector (line to neutral for AC_3_PHASE), in volt [V].
+       amperage:
+         type: integer
+         description: maximum amperage of the connector, in ampere [A].                       |
+       tariff_id:
+         type: string
+         pattern: '^.{1,36}$'
+         description: Identifier of the current charging tariff structure. For a "Free of Charge" tariff this field should be set, and point to a defined "Free of Charge" tariff. |
+       terms_and_conditions:
+         type: string
+         $ref: '#/components/schemas/URL'
+         description: URL to the operator's terms and conditions.                             |
+       last_updated:
+         type: string
+         $ref: '#/components/schemas/DateTime'
+         description: Timestamp when this Connectors was last updated (or created).           |
+
+    PowerType:
+      type: string
+      description: |
+        | Value             | Description                                                              |
+        |-------------------|--------------------------------------------------------------------------|
+        | AC_1_PHASE        | AC mono phase.                                                           |
+        | AC_3_PHASE        | AC 3 phase.                                                              |
+        | DC                | Direct Current.                                                          |
+      enum:
+        - AC_1_PHASE
+        - AC_3_PHASE
+        - DC
+
+    ParkingRestriction:
+      type: string
+      description: |
+        | Value               | Description                                                              |
+        |:--------------------|:-------------------------------------------------------------------------|
+        | EV_ONLY             |  Reserved parking spot for electric vehicles.                            |
+        | PLUGGED             |  Parking is only allowed while plugged in (charging).                       |
+        | DISABLED            |  Reserved parking spot for disabled people with valid ID.                |
+        | CUSTOMERS           |  Parking spot for customers/guests only, for example in case of a hotel or shop.|
+        | MOTORCYCLES         |  Parking spot only suitable for (electric) motorcycles or scooters.      |
+      enum:
+        - EV_ONLY
+        - PLUGGED
+        - DISABLED
+        - CUSTOMERS
+        - MOTORCYCLES
+
+    EVSE:
+      type: object
+      properties:
+        uid:
+          type: string
+          pattern: '^.{1,39}$'
+          description: >-
+            Uniquely identifies the EVSE within the CPOs platform (and suboperator platforms). For example a database unique ID or the "EVSE ID". This field can never be changed, modified or renamed. This is the 'technical' identification of the EVSE, not to be used as 'human readable' identification, use the field: evse_id for that.
+        evse_id:
+          type: string
+          pattern: '^.{1,48}$'
+          description: >-
+            Compliant with the following specification for EVSE ID from "eMI3 standard version V1.0" (http://emi3group.com/documents-links/) "Part 2: business objects." Optional because: if an EVSE ID is to be re-used the EVSE ID can be removed from an EVSE that is removed (status: REMOVED)
+        status:
+          type: object
+          $ref: '#/components/schemas/Status'
+          description:  Indicates the current status of the EVSE.
+        status_schedule:
+          type: object
+          $ref: '#/components/schemas/StatusSchedule'
+          description: Indicates a planned status in the future of the EVSE.
+        capabilities:
+          type: array
+            items:
+              $ref: '#/components/schemas/Capability'
+          description: List of functionalities that the EVSE is capable of.
+        connectors:
+          type: array
+            items:
+              $ref: '#/components/schemas/Connector'
+#          required: true
+          description: List of available connectors on the EVSE.
+        floor_level:
+          type: string
+          pattern: '^.{1,4}$'
+          description: Level on which the charging station is located (in garage buildings) in the locally displayed numbering scheme.
+        coordinates:
+          type: object
+          $ref: '#/components/schemas/GeoLocation'
+          description: Coordinates of the EVSE.
+        physical_reference:
+          type: string
+          pattern: '^.{1,16}$'
+          description: A number/string printed on the outside of the EVSE for visual identification.
+        directions:
+          type: object
+          $ref:  '#/components/schemas/DisplayText'
+          description: Multi-language human-readable directions when more detailed information on how to reach the EVSE from the Location is required.
+        parking_restrictions:
+          type: object
+          required: false
+          $ref: '#/components/schemas/ParkingRestriction'
+          description: The restrictions that apply to the parking spot.
+        images:
+          type: object
+          $ref: '#/components/schemas/Image'
+          description: Links to images related to the EVSE such as photos or logos.
+        last_updated:
+          type: string
+          #          required: true
+          $ref: '#/components/schemas/DateTime'
+          description: Timestamp when this EVSE or one of its Connectors was last updated (or created).
+
+
+
+    Location:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: '^.{1,39}$'
+          #          required: true
+          description: Uniquely identifies the location within the CPOs platform (and suboperator platforms). This field can never be changed, modified or renamed.
+        type:
+          type: string
+          #          required: true
+          $ref: '#/components/schemas/LocationType'
+          description: The general type of the charge point location.
+        name:
+          type: string
+          pattern: '^.{1,255}$'
+          description: Display name of the location.
+        address:
+          type: string
+          pattern: '^.{1,45}$'
+          #          required: true
+          description: Street/block name and house number if available.
+        city:
+          type: string
+          pattern: '^.{1,45}$'
+          #          required: true
+          description: City or town.
+        postal_code:
+          type: string
+          pattern: '^.{1,10}$'
+          #          required: true
+          description: Postal code of the location.
+        country:
+          type: string
+          pattern: '^.{1,3}$'
+          #          required: true
+          description: ISO 3166-1 alpha-3 code for the country of this location.
+        coordinates:
+          type: object
+          $ref: '#/components/schemas/GeoLocation'
+          #          required: true
+          description:  Coordinates of the location.
+        related_locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalGeoLocation'
+          description: Geographical location of related points relevant to the user.
+        #        evses:
+        #          type: array
+        #          $ref: EVSE * List of EVSEs that belong to this Location.
+        directions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisplayText'
+          description: Human-readable directions on how to reach the location.
+        operator:
+          type: object
+          $ref: '#/components/schemas/BusinessDetails'
+          description: Information of the operator. When not specified, the information retrieved from the api_info endpoint should be used instead.
+        suboperator:
+          type: object
+          $ref: '#/components/schemas/BusinessDetails'
+          description: Information of the suboperator if available.
+        owner:
+          type: object
+          $ref: '#/components/schemas/BusinessDetails'
+          description: Information of the owner if available.
+        #        facilities:
+        #          type: object
+        #          $ref: Facility * Optional list of facilities this charge location directly belongs to.
+        time_zone:
+          type: string
+          pattern: '^.{1,255}$'
+          description: >-
+            One of IANA tzdata's TZ-values representing the time zone of the location. Examples: "Europe/Oslo", "Europe/Zurich". (http://www.iana.org/time-zones)
+        #        opening_times:
+        #          type: object
+        #          $ref: Hours ? The times when the EVSEs at the location can be accessed for charging.
+        charging_when_closed:
+          type: boolean
+          description: >-
+            if the EVSEs are still charging outside the opening hours of the location. E.g. when the parking garage closes its barriers over night, is it allowed to charge till the next morning? Default: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          description: Links to images related to the location such as photos or logos.
+        #        energy_mix:
+        #          type: object
+        #          $ref: EnergyMix ? Details on the energy supplied at this location.
+        last_updated:
+          type: string
+          #          required: true
+          $ref: '#/components/schemas/DateTime'
+          description: Timestamp when this Location or one of its EVSEs or Connectors were last updated (or created).
+
+    ExceptionalPeriod:
+      type: object
+      properties:
+        period_begin:
+          type: string
+          $ref: '#/components/schemas/DateTime'
+          description: Begin of the exception.
+        period_end:
+          type: string
+          $ref: '#/components/schemas/DateTime'
+          description: End of the exception.
+
+    RegularHours:
+      type: object
+      description: Regular recurring operation or access hours
+      properties:
+        weekday:
+          type: integer
+          description: Number of day in the week, from Monday (1) till Sunday (7)
+        period_begin:
+          type: string
+          pattern: '^[0-2][0-9]:[0-5][0-9]$'
+          description: 'Begin of the regular period given in hours and minutes. Must be in 24h format with leading zeros. Example: "18:15". Hour/Minute separator: ":" Regex: [0-2][0-9]:[0-5][0-9]'
+        period_end:
+          type: string
+          pattern: '^[0-2][0-9]:[0-5][0-9]$'
+          description: End of the regular period, syntax as for period_begin. Must be later than period_begin.
+
+    Hours:
+      type: object
+      description: Opening and access hours of the location.
+      properties:
+        regular_hours:
+          type: object
+          $ref: '#/components/schemas/RegularHours'
+          description: Regular hours, weekday based. Should not be set for representing 24/7 as this is the most common case.
+        twentyfourseven:
+          type: boolean
+          description: True to represent 24 hours a day and 7 days a week, except the given exceptions.
+        exceptional_openings:
+          type: object
+          $ref: '#/components/schemas/ExceptionalPeriod'
+          description: Exceptions for specified calendar dates, time-range based. Periods the station is operating/accessible. Additional to regular hours. May overlap regular rules.
+        exceptional_closings:
+          type: object
+          $ref: '#/components/schemas/ExceptionalPeriod'
+          description: Exceptions for specified calendar dates, time-range based. Periods the station is not operating/accessible. Overwriting regularHours and exceptionalOpenings. Should not overlap exceptionalOpenings.
+
+    ## Response classes
+
+    VersionsResponse:
+      allOf:
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Version'
+        - $ref: '#/components/schemas/ResponseStatus'
+
+
+    ResponseStatus:
+      type: object
+      properties:
+        status_code:
+          type: integer
+        status_message:
+          type: string
+        timestamp:
+          type: string
