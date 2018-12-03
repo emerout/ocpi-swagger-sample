@@ -765,7 +765,7 @@ components:
          description: The format (socket/cable) of the installed connector.
        power_type:
          type: string
-         $ref: '#/components/schemas/PowerType'                                                             |
+         $ref: '#/components/schemas/PowerType'
        voltage:
          type: integer
          description: Voltage of the connector (line to neutral for AC_3_PHASE), in volt [V].
@@ -838,13 +838,13 @@ components:
           description: Indicates a planned status in the future of the EVSE.
         capabilities:
           type: array
-            items:
-              $ref: '#/components/schemas/Capability'
+          items:
+            $ref: '#/components/schemas/Capability'
           description: List of functionalities that the EVSE is capable of.
         connectors:
           type: array
-            items:
-              $ref: '#/components/schemas/Connector'
+          items:
+            $ref: '#/components/schemas/Connector'
 #          required: true
           description: List of available connectors on the EVSE.
         floor_level:
